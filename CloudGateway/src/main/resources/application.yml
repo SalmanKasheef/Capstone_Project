@@ -1,0 +1,48 @@
+server:
+    port: 9191
+    
+spring:
+    application:
+     name: API-GATEWAY
+
+    cloud:
+      gateway:
+        discovery:
+          locator:
+            enabled: true
+      
+        routes:
+         - id: RESTAURANT-SEARCH-SERVICE
+           uri: lb://RESTAURANT-SEARCH-SERVICE
+           predicates:
+                - Path=/api/restaurants/**  
+                    
+         - id: ORDER-MANAGEMENT-SERVICE
+           uri: lb://ORDER-MANAGEMENT-SERVICE
+           predicates:
+                 - Path=/api/orders/**   
+          
+         - id: CUSTOMER-MANAGEMENT-SERVICE
+           uri: lb://CUSTOMER-MANAGEMENT-SERVICE
+           predicates:
+                 - Path=/api/customer/** 
+             
+         - id: REVIEW-MANAGEMENT-SERVICE
+           uri: lb://REVIEW-MANAGEMENT-SERVICE
+           predicates:
+                 - Path=/api/review/**  
+
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+        defaultZone: http://localhost:8761/eureka/
+        instance:
+          hostname: localhost
+  instance:
+    ip-address:    true
+      
+ 
+ 

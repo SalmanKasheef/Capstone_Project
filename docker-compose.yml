@@ -1,0 +1,69 @@
+version: '3'
+services:
+  restaurant-service:
+    image: salmankasheef/restaurant_service
+    ports:
+      - "8088:8088"
+    links:
+      - config-server
+      - service-discovery
+
+  customer-service:
+    image: salmankasheef/customer_management_service
+    links:
+      - config-server
+      - service-discovery
+
+  order-service:
+    image: salmankasheef/order_management
+    links:
+      - config-server
+      - service-discovery
+
+  review-service:
+    image: salmankasheef/review_management
+    links:
+      - config-server
+      - service-discovery
+
+
+
+  mysql:
+    image: mysql:5.5
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/Restaurant_Services
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      MYSQL_DATABASE: Restaurant_Services
+
+  api-gateway:
+    image: salmankasheef/apigateway
+    ports:
+      - "9191:9191"
+    links:
+      - service-discovery
+      - RESTAURANT-SEARCH-SERVICE
+      - ORDER-MANAGEMENT-SERVICE
+      - CUSTOMER-MANAGEMENT-SERVICE
+      - REVIEW-MANAGEMENT-SERVICE
+
+  config-server:
+    image: salmankasheef/config_server
+    ports:
+      - "8888:8888"
+    links:
+      - service-discovery
+
+  kafka-server:
+    image: salmankasheef/kafka
+    ports:
+      - "9999:9999"
+
+  service-discovery:
+    image: salmankasheef/service_discovery
+    ports:
+      - "8761:8761"
+
+
+
+
